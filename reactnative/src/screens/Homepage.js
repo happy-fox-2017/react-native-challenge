@@ -1,12 +1,14 @@
 import React  from 'react';
 import { View, Text, Button, Image } from 'react-native';
 
+const dayWalpaper = require('../images/bluesky.jpg')
+
 class HomeScreen extends React.Component  {
 
   render(){
-    return(
+    return (
       <View>
-        <Text>Welcome Home</Text>
+        <Image source={dayWalpaper}></Image>
       </View>
     )
   }
