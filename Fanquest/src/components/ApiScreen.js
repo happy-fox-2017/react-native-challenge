@@ -9,57 +9,48 @@ import {
   Alert
 } from 'react-native';
 
-export default class ApiScreen extends Component {
-  constructor(){
-    super ()
+class ApiScreen extends Component {
+  constructor(props){
+    super (props)
     this.state = {
-      img: '',
+      gambar: '',
       answer: ''
     }
+    this.Sentuh = this.Sentuh.bind(this)
   }
+  Sentuh() {
 
-  }
-  _onPress() {
-
-  fetch('https://yesno.wtf/')
-  .then(function(response) {
-    Alert.alert(response);
-  })
-
+  return fetch('https://yesno.wtf/api')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          gambar: responseJson.image,
+          answer: responseJson.answer
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome Nugraha
-        </Text>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{uri: 'https://images.gr-assets.com/books/1347596568l/1861903.jpg'}}
-        />
-        <Text style={styles.instructions}>
-          Or
-        </Text>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{uri: 'http://data.whicdn.com/images/152232618/superthumb.jpg'}}
-        />
-
-        <Text style={styles.instructions}>
-          Click button below to find-up your answer
+          Please Input your question
         </Text>
         <View style={styles.buttonContainer}>
-          {/* <Button onPress={this._onPress} title="Helli" color="#FFFFFF" accessibilityLabel="Tap on Me"/> */}
           <Button
-            onPress={this._onPress}
-            title="Learn More"
+            onPress={this.Sentuh}
+            title="Find Out"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
         </View>
         <Image
-          style={{width: 100, height: 100}}
-          source={{uri: }}
+          style={{width: 200, height: 200, justifyContent: 'center', alignItems: 'center', paddingLeft:50}}
+          source={{uri: this.state.gambar}}
         />
       </View>
     );
@@ -69,9 +60,6 @@ export default class ApiScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,
@@ -87,6 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2E9298',
     borderRadius: 10,
     padding: 5,
+    marginBottom: 5,
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,

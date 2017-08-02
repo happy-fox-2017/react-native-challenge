@@ -9,29 +9,41 @@ import {
   Alert
 } from 'react-native';
 
-export default class HomeScreen extends Component {
-  constructor(){
-    super ()
+class HomeScreen extends Component {
+  constructor(props){
+    super (props)
     this.state = {
-      img: '',
+      gambar: '',
       answer: ''
     }
+    this.Sentuh = this.Sentuh.bind(this)
   }
+  Sentuh() {
 
-  }
-  _onPress() {
+  return fetch('https://yesno.wtf/api')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          gambar: responseJson.image,
+          answer: responseJson.answer
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+ }
 
-  fetch('https://yesno.wtf/')
-  .then(function(response) {
-    Alert.alert(response);
-  })
-
+ componentWillMount(){
+   console.log('inijalan');
+   console.log(this.state.image);
  }
   render() {
+    const { navigate } = this.props.navigation
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome Nugraha
+          Did You Have Question??? Broo!!!
         </Text>
         <Image
           style={{width: 100, height: 100}}
@@ -49,18 +61,13 @@ export default class HomeScreen extends Component {
           Click button below to find-up your answer
         </Text>
         <View style={styles.buttonContainer}>
-          {/* <Button onPress={this._onPress} title="Helli" color="#FFFFFF" accessibilityLabel="Tap on Me"/> */}
           <Button
-            onPress={this._onPress}
-            title="Learn More"
+            onPress={() => navigate('Api')}
+            title="Find Out"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
         </View>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{uri: }}
-        />
       </View>
     );
   }
