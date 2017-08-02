@@ -6,7 +6,9 @@ import {
   View,
   Image,
   Button,
-  Alert
+  Alert,
+  TextInput,
+  Modal
 } from 'react-native';
 
 class ApiScreen extends Component {
@@ -14,10 +16,19 @@ class ApiScreen extends Component {
     super (props)
     this.state = {
       gambar: '',
-      answer: ''
+      answer: '',
+      question: ''
     }
+
     this.Sentuh = this.Sentuh.bind(this)
   }
+
+  setModelVisible(visible){
+    this.setState({
+      modalVisible: visible
+    })
+  }
+  
   Sentuh() {
 
   return fetch('https://yesno.wtf/api')
@@ -26,7 +37,7 @@ class ApiScreen extends Component {
         console.log(responseJson);
         this.setState({
           gambar: responseJson.image,
-          answer: responseJson.answer
+          answer: responseJson.answer,
         })
       })
       .catch((error) => {
@@ -38,8 +49,12 @@ class ApiScreen extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Please Input your question
+          Please Input your question.!!
         </Text>
+        <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        value={this.state.question}
+      />
         <View style={styles.buttonContainer}>
           <Button
             onPress={this.Sentuh}
@@ -48,10 +63,15 @@ class ApiScreen extends Component {
             accessibilityLabel="Learn more about this purple button"
           />
         </View>
-        <Image
-          style={{width: 200, height: 200, justifyContent: 'center', alignItems: 'center', paddingLeft:50}}
-          source={{uri: this.state.gambar}}
-        />
+        <View style={styles.picture}>
+          <Text style={styles.titleText}>
+            {this.state.answer}
+          </Text>
+          <Image
+            style={{width: 400, height: 250}}
+            source={{uri: this.state.gambar}}
+          />
+        </View>
       </View>
     );
   }
@@ -60,6 +80,17 @@ class ApiScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  titleText: {
+    fontSize: 50,
+    fontWeight: 'bold',
+    fontFamily: 'Cochin',
+  },
+  picture: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   welcome: {
     fontSize: 20,

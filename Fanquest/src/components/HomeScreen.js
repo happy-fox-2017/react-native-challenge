@@ -6,7 +6,9 @@ import {
   View,
   Image,
   Button,
-  Alert
+  Alert,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 
 class HomeScreen extends Component {
@@ -14,10 +16,20 @@ class HomeScreen extends Component {
     super (props)
     this.state = {
       gambar: '',
-      answer: ''
+      answer: '',
+      modalVisible: false
     }
     this.Sentuh = this.Sentuh.bind(this)
+    this.setModalVisible = this.setModalVisible.bind(this)
+
   }
+
+  setModalVisible(visible){
+    this.setState({
+      modalVisible: visible
+    })
+  }
+
   Sentuh() {
 
   return fetch('https://yesno.wtf/api')
@@ -45,18 +57,25 @@ class HomeScreen extends Component {
         <Text style={styles.welcome}>
           Did You Have Question??? Broo!!!
         </Text>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{uri: 'https://images.gr-assets.com/books/1347596568l/1861903.jpg'}}
-        />
-        <Text style={styles.instructions}>
-          Or
-        </Text>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{uri: 'http://data.whicdn.com/images/152232618/superthumb.jpg'}}
-        />
-
+            {this.state.modalVisible ?
+              <TouchableHighlight onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible)
+                  }}>
+              <Image
+                style={{width: 100, height: 100}}
+                source={{uri: 'https://images.gr-assets.com/books/1347596568l/1861903.jpg'}}
+              />
+              </TouchableHighlight>
+              :
+              <TouchableHighlight onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible)
+                  }}>
+              <Image
+                style={{width: 100, height: 100}}
+                source={{uri: 'http://data.whicdn.com/images/152232618/superthumb.jpg'}}
+              />
+              </TouchableHighlight>
+            }
         <Text style={styles.instructions}>
           Click button below to find-up your answer
         </Text>
