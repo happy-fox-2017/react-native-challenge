@@ -14,18 +14,21 @@ import {
   Image,
   Button,
   Animated,
-  LayoutAnimation
+  LayoutAnimation,
+  Easing,
+  ActivityIndicator
 } from 'react-native';
 
 export default class mySeconds extends Component {
   constructor(props) {
     super(props)
-    this.state = {text: '', answer: null, img: null}
+    this.spinValue = new Animated.Value(0)
+    this.state = {text: '', answer: null, img: null, animating: true}
   }
-  // componentWillMount() {
-  //   this.getAnswer()
-  // }
-  getAnswer() {
+  closeActivityIndicator = () => setTimeout(() => this.setState({ animating: false }), 6000)
+
+  getAnswer(loading) {
+    this.setState({img: loading})
     return fetch('https://yesno.wtf/api')
     .then((response) => response.json())
     .then((responseJson) => {
@@ -43,7 +46,8 @@ export default class mySeconds extends Component {
   }
 
   render() {
-    console.log('ini img: ', this.state.img);
+    const animating = this.state.animating
+
     return (
       <View
         style={styles.container}
@@ -57,12 +61,7 @@ export default class mySeconds extends Component {
           placeholder="Type Your Question Here.."
           onChangeText={(text) => this.setState({text})}
         />
-        <Button
-          onPress={() => {
-            this.getAnswer()
-          }}
-          title="Get Answer!"
-        />
+
 
           <Text
             style={{marginLeft: 30, padding:10, fontSize:22}}
@@ -70,10 +69,13 @@ export default class mySeconds extends Component {
             Your Question is {this.state.text}
           </Text>
         {
-          this.state.img === null ?
-          <Image source={{uri: 'https://i.stack.imgur.com/h6viz.gif'}}/>
-          // LayoutAnimation.spring();
-          // null
+          this.state.img === "loading" ?
+          <ActivityIndicator
+              animating = {animating}
+              color = 'blue'
+              size = "large"
+              style = {styles.activityIndicator}
+           />
           :
           <Image
             source={{uri: this.state.img}}
@@ -89,6 +91,12 @@ export default class mySeconds extends Component {
             The Answer Is: {this.state.answer}
           </Text>
         }
+        <Button
+          onPress={() => {
+            this.getAnswer("loading")
+          }}
+          title="Get Answer!"
+        />
       </View>
     );
   }
@@ -115,7 +123,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   TextInput: {
-    height: 40
+    height: 40,
+    fontSize: 15
   }
 });
 
