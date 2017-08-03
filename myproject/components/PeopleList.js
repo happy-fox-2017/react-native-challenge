@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import store from '../stores';
+import { getPeople } from '../actions';
 
-import axios from 'axios';
-
-const SWAPI_URL = 'https://swapi.co/api/people';
 
 class PeopleList extends Component {
 
@@ -12,16 +11,17 @@ class PeopleList extends Component {
     this.state = {
       people: [],
     };
+
+    store.subscribe(this.updatePeople);
   }
 
   componentWillMount() {
-    axios.get(SWAPI_URL)
-    .then((response) => {
-      console.log(response);
-      this.setState({
-        people: response.data.results,
-      });
-    });
+    store.dispatch(getPeople());
+  }
+
+  updatePeople = () => {
+    const { people } = store.getState();
+    this.setState({ people });
   }
 
   render() {
