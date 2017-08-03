@@ -4,3 +4,4 @@
  * @flow
  */
 import './src/App.js'
+console.ignoredYellowBox = ['Warning: View.propTypes'];

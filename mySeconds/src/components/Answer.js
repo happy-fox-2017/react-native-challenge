@@ -12,18 +12,26 @@ import {
   View,
   TextInput,
   Image,
-  Button,
   Animated,
   LayoutAnimation,
   Easing,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal,
 } from 'react-native';
+
+import {
+  Card,
+  Button
+} from 'nachos-ui'
+
+import { withConnection, connectionShape } from 'react-native-connection-info';
+
 
 export default class mySeconds extends Component {
   constructor(props) {
     super(props)
     this.spinValue = new Animated.Value(0)
-    this.state = {text: '', answer: null, img: null, animating: true}
+    this.state = {text: '', answer: null, img: null, animating: true, modalVisible: false}
   }
   closeActivityIndicator = () => setTimeout(() => this.setState({ animating: false }), 6000)
 
@@ -35,7 +43,7 @@ export default class mySeconds extends Component {
       console.log('this is my response api: ', responseJson);
       this.setState({
         img: responseJson.image,
-        answer: responseJson.answer
+        answer: 'the lord said....'+responseJson.answer
       })
       LayoutAnimation.spring();
       return responseJson
@@ -43,6 +51,13 @@ export default class mySeconds extends Component {
     .catch((error) => {
       console.log(error);
     })
+  }
+
+  getHydra(visible) {
+    if (visible !== true) {
+      this.setState({text: '', img: null, answer: null})
+    }
+    this.setState({modalVisible: visible})
   }
 
   render() {
@@ -54,21 +69,24 @@ export default class mySeconds extends Component {
         style={styles.View}
       >
         <Text style={styles.welcome}>
-          Welcome to Kerang Ajaib
+          ASK the Lord Anything....
         </Text>
         <TextInput
           style={styles.TextInput}
           placeholder="Type Your Question Here.."
           onChangeText={(text) => this.setState({text})}
+          value={this.state.text}
         />
+        <Text
+          style={{marginLeft: 30, padding:10, fontSize:15}}
+        >
+          Your Question is {this.state.text}
+        </Text>
 
-
-          <Text
-            style={{marginLeft: 30, padding:10, fontSize:22}}
-          >
-            Your Question is {this.state.text}
-          </Text>
         {
+          this.state.img === null ?
+          null
+          :
           this.state.img === "loading" ?
           <ActivityIndicator
               animating = {animating}
@@ -76,28 +94,67 @@ export default class mySeconds extends Component {
               size = "large"
               style = {styles.activityIndicator}
            />
+
           :
-          <Image
-            source={{uri: this.state.img}}
-            style={{marginTop:50, marginLeft:35, width: 250, height: 250}}
+
+          <Card style={styles.okLord}
+            footerContent={this.state.answer}
+
+            image={this.state.img}
+            style={{margin: 15, height: 120, width: 280, borderRadius: 5}}
           />
 
         }
-        { this.state.answer === null ? null
-        :
+
+        {/* {
+          this.state.answer === null ?
+          null :
           <Text
-            style={{marginLeft: 30, padding:10, fontSize:22}}
+            style={{marginLeft: 30, padding:10, fontSize:15}}
           >
-            The Answer Is: {this.state.answer}
+            the lord said.... {this.state.answer}
           </Text>
+        } */}
+
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {alert("Modal has been closed.")}}
+          >
+         <View style={{marginTop: 22}}>
+          <View>
+            <Text>Hail Lord Magic Shell</Text>
+            <Card
+              image='http://i.imgur.com/y04Bu1o.gif'
+              style={{height: '80%'}}
+            />
+            <Button onPress={() => {
+              this.getHydra(!this.state.modalVisible)
+            }}>
+              {/* <Text>Hide Modal</Text> */}
+              HAIL HYRDRA!
+            </Button>
+          </View>
+         </View>
+        </Modal>
+        {
+          this.state.img === null ?
+          <Button
+            onPress={() => {
+              this.getAnswer("loading", "text")
+            }}
+          >
+            Ask The Lord!
+          </Button>
+          :
+          this.state.img === "loading" ?
+          null :
+          <Button onPress={() => this.getHydra(true)}>OK LORD!</Button>
         }
-        <Button
-          onPress={() => {
-            this.getAnswer("loading")
-          }}
-          title="Get Answer!"
-        />
+
       </View>
+
     );
   }
 }
@@ -125,6 +182,12 @@ const styles = StyleSheet.create({
   TextInput: {
     height: 40,
     fontSize: 15
+  },
+  cardStyle: {
+  },
+  okLord: {
+    justifyContent: 'flex-end',
+    backgroundColor: 'yellow',
   }
 });
 
