@@ -5,13 +5,14 @@ import {
   View,
   ListView,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage
 } from 'react-native'
-// import moment from 'moment'
+import moment from 'moment'
 
 import Axios from 'axios'
 
-const TOTAL_NEWS_ITEMS = 10
+const TOTAL_NEWS_ITEMS = 20
 const white = '#FFF'
 const brokenWhite = '#F6F6EF'
 const gray = '#F0F0F0'
@@ -74,29 +75,29 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    // AsyncStorage.getItem('news_items').then((news_items_str) => {
-    //   let news_items = JSON.parse(news_items_str)
-    //     if(news_items !== null) {
-    //
-    //       AsyncStorage.getItem('time').then((time_str) => {
-    //         let time = JSON.parse(time_str)
-    //         let last_cache = time.last_cache
-    //         let current_datetime = moment()
-    //
-    //         let diff_days = current_datetime.diff(last_cache, 'days')
-    //
-    //         if(diff_days > 0) {
-    //           this.getNews()
-    //         } else {
-    //           this.updateNewsItemsUI(news_items)
-    //         }
-    //       });
-    //
-    //     } else {
-    //       this.getNews()
-    //     }
-    // }).done()
-    this.getNews()
+    AsyncStorage.getItem('news_items').then((news_items_str) => {
+      let news_items = JSON.parse(news_items_str)
+        if(news_items !== null) {
+
+          AsyncStorage.getItem('time').then((time_str) => {
+            let time = JSON.parse(time_str)
+            let last_cache = time.last_cache
+            let current_datetime = moment()
+
+            let diff_days = current_datetime.diff(last_cache, 'days')
+
+            if(diff_days > 0) {
+              this.getNews()
+            } else {
+              this.updateNewsItemsUI(news_items)
+            }
+          });
+
+        } else {
+          this.getNews()
+        }
+    }).done()
+    //this.getNews()
   }
 
   renderNews(news) {
@@ -119,7 +120,7 @@ export default class App extends React.Component {
     const TOP_STORIES_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json'
     // story_url = []
 
-    // AsyncStorage.setItem('time', JSON.stringify({'last_cache': moment()}))
+    AsyncStorage.setItem('time', JSON.stringify({'last_cache': moment()}))
 
     Axios(TOP_STORIES_URL)
     .then((res) => {
@@ -132,7 +133,7 @@ export default class App extends React.Component {
   getDetail(data) {
     let news_items = []
 
-    for(let x = 0; x <= TOTAL_NEWS_ITEMS; x++) {
+    for(let x = 0; x <= 30; x++) {
       let story_url = "https://hacker-news.firebaseio.com/v0/item/" + data[x] + ".json"
       Axios(story_url)
       .then((res) => {
@@ -142,7 +143,7 @@ export default class App extends React.Component {
         console.log(news_items.length)
 
         this.updateNewsItemsUI(news_items)
-        // this.updateNewsItemDB(news_items)
+        this.updateNewsItemDB(news_items)
 
       }).catch((error) => console.log('Uh oh! Story error..', error) )
     }
@@ -150,25 +151,23 @@ export default class App extends React.Component {
   }
 
   updateNewsItemsUI(news_items) {
-    //if(news_items.length === TOTAL_NEWS_ITEMS) {
+    if(news_items.length === TOTAL_NEWS_ITEMS) {
       let ds = this.state.dataSource.cloneWithRows(news_items)
       this.setState({
         'news': ds,
         'loaded': true
       })
-      console.log(this.state);
-    //}
+    }
   }
 
-  // updateNewsItemDB(news_items) {
-  //   //if(news_items.length === TOTAL_NEWS_ITEMS) {
-  //     AsyncStorage.setItem('news_items', JSON.stringify(news_items))
-  //   //}
-  // }
+  updateNewsItemDB(news_items) {
+    if(news_items.length === TOTAL_NEWS_ITEMS) {
+      AsyncStorage.setItem('news_items', JSON.stringify(news_items))
+    }
+  }
 
   render() {
     console.log("Oh yeah..")
-    console.log(this.state)
     return (
       <View style={styles.container}>
         <View style={styles.header}>
