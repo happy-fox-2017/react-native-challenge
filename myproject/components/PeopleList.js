@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 
 import axios from 'axios';
 
@@ -25,10 +25,17 @@ class PeopleList extends Component {
   }
 
   render() {
+    // const { navigate } = this.props.navigation;
     return (
       <FlatList
         data={this.state.people}
-        renderItem={({ item }) => <Text style={ styles.item }>{item.name}</Text>}
+        renderItem={({ item }) => (
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { detailsUrl: item.url } )} underlayColor="white">
+            <View>
+              <Text style={styles.item}>{item.name}</Text>
+            </View>
+          </TouchableHighlight>
+        )}
       />
     );
   }

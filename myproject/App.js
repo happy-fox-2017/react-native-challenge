@@ -1,16 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PeopleList from './components/PeopleList';
+import {
+  StackNavigator,
+} from 'react-navigation';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <PeopleList />
-      </View>
-    );
-  }
-}
+import MainScreen from './screens/Main';
+import DetailsScreen from './screens/Details';
+// import PeopleList from './components/PeopleList';
+
+
+
+// class AppX extends React.Component {
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <PeopleList />
+//       </View>
+//     );
+//   }
+// }
 
 const styles = StyleSheet.create({
   container: {
@@ -20,3 +28,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const App2 = StackNavigator({
+  Main: { screen: MainScreen },
+  Details: { screen: DetailsScreen },
+});
+
+export default App2;
+
