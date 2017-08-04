@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation';
 import { getPeople } from '../actions';
-
 
 class PeopleList extends Component {
 
@@ -16,7 +16,7 @@ class PeopleList extends Component {
       <FlatList
         data={this.props.people}
         renderItem={({ item }) => (
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { detailsUrl: item.url } )} underlayColor="white">
+          <TouchableHighlight onPress={() => this.props.detailsScreen(item.url)} underlayColor="white">
             <View>
               <Text style={styles.item}>{item.name}</Text>
             </View>
@@ -33,6 +33,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPeople: () => dispatch(getPeople()),
+  detailsScreen: detailsUrl => dispatch(NavigationActions.navigate({ routeName: 'Details', params: { detailsUrl } })),
 });
 
 
