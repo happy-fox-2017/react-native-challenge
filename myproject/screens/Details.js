@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-import axios from 'axios';
+import { View } from 'react-native';
 import PersonDetail from '../components/PersonDetail';
+import store from '../stores';
+import { getPerson } from '../actions';
 
 class Details extends Component {
 
@@ -10,16 +11,17 @@ class Details extends Component {
     this.state = {
       person: {},
     };
+    store.subscribe(this.updatePerson);
   }
 
   componentWillMount() {
     const url = this.props.navigation.state.params.detailsUrl;
-    axios.get(url)
-    .then((response) => {
-      this.setState({
-        person: response.data,
-      });
-    });
+    store.dispatch(getPerson(url));
+  }
+
+  updatePerson = () => {
+    const { person } = store.getState();
+    this.setState({ person });
   }
 
   render() {

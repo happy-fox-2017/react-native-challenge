@@ -32,12 +32,11 @@ export const resetPerson = () => {
   };
 };
 
-export const getPerson = (id) => {
+export const getPerson = (url) => {
   return (dispatch) => {
-    axios.get(`${SWAPI_URL}/${id}`)
+    axios.get(url)
     .then((response) => {
       dispatch(loadPerson(response.data));
     });
   };
 };
-
