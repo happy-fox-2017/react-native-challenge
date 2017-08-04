@@ -1,6 +1,8 @@
 import { AppNavigator } from '../navigators/AppNavigator';
 
-export const navReducer = (state, action) => {
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Main'));
+
+export const navReducer = (state = initialState, action) => {
   const newState = AppNavigator.router.getStateForAction(action, state);
   return newState || state;
 };
