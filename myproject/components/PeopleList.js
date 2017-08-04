@@ -1,34 +1,20 @@
 import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
-import store from '../stores';
+import { connect } from 'react-redux';
 import { getPeople } from '../actions';
 
 
 class PeopleList extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      people: [],
-    };
-
-    store.subscribe(this.updatePeople);
-  }
-
   componentWillMount() {
-    store.dispatch(getPeople());
-  }
-
-  updatePeople = () => {
-    const { people } = store.getState();
-    this.setState({ people });
+    this.props.getPeople();
   }
 
   render() {
     // const { navigate } = this.props.navigation;
     return (
       <FlatList
-        data={this.state.people}
+        data={this.props.people}
         renderItem={({ item }) => (
           <TouchableHighlight onPress={() => this.props.navigation.navigate('Details', { detailsUrl: item.url } )} underlayColor="white">
             <View>
@@ -40,6 +26,15 @@ class PeopleList extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  people: state.people,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getPeople: () => dispatch(getPeople()),
+});
+
 
 const styles = StyleSheet.create({
   container: {
@@ -53,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PeopleList;
+export default connect(mapStateToProps, mapDispatchToProps)(PeopleList);

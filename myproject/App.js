@@ -3,12 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import {
   StackNavigator,
 } from 'react-navigation';
+import { Provider } from 'react-redux';
 
-import MainScreen from './screens/Main';
-import DetailsScreen from './screens/Details';
+// import MainScreen from './screens/Main';
+// import DetailsScreen from './screens/Details';
 // import PeopleList from './components/PeopleList';
-
-
+import store from './stores';
+import AppWithNavigationState from './navigators/AppNavigator';
 
 // class AppX extends React.Component {
 //   render() {
@@ -29,10 +30,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const App2 = StackNavigator({
-  Main: { screen: MainScreen },
-  Details: { screen: DetailsScreen },
-});
+// const App2 = StackNavigator({
+//   Main: { screen: MainScreen },
+//   Details: { screen: DetailsScreen },
+// });
 
-export default App2;
+class ReduxExampleApp extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppWithNavigationState />
+      </Provider>
+    );
+  }
+}
 
+export default ReduxExampleApp;
