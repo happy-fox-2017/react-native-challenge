@@ -167,18 +167,6 @@ export default class Main extends React.Component {
     )
   }
 
-  // viewPage() {
-  //   this.props.navigation.navigate('News')
-  // }
-
-  // {this.viewPage.bind(this, news.url)}
-
-  // viewPage(url) {
-  //   //this.props.navigator.push({name: 'web_page', url: url});
-  //   console.log(this.props.navigation, "navigation renderNews")
-  // }
-
-
   render() {
     console.log("Oh yeah..")
 

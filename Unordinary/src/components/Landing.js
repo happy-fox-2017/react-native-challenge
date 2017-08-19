@@ -16,7 +16,7 @@ export default class Landing extends React.Component {
 
     return (
       <View>
-        <Text>Hello, Chat App!</Text>
+        <Text>Welcome!</Text>
         <Button
           onPress={() => navigate('Main')}
           title="Get Started"
